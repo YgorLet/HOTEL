@@ -1,0 +1,70 @@
+using System;
+
+class Pessoa
+{
+    public string Nome { get; set; }
+    public int Idade { get; set; }
+    public string Documento { get; set; }
+}
+
+class Suite
+{
+    public int Numero { get; set; }
+    public int Capacidade { get; set; }
+    public decimal ValorDiaria { get; set; }
+}
+
+class Reserva
+{
+    public Pessoa Hospede { get; set; }
+    public Suite Suite { get; set; }
+    public DateTime DataEntrada { get; set; }
+    public DateTime DataSaida { get; set; }
+
+    public int QuantidadeHospedes()
+    {
+        return Hospede != null ? 1 : 0;
+    }
+
+    public decimal ValorTotal()
+    {
+        var quantidadeDias = (int)(DataSaida - DataEntrada).TotalDays;
+        var valorTotal = quantidadeDias * Suite.ValorDiaria * QuantidadeHospedes();
+        if (quantidadeDias > 10)
+        {
+            valorTotal *= 0.9m;
+        }
+        return valorTotal;
+    }
+}
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        var pessoa = new Pessoa()
+        {
+            Nome = "Fulano de Tal",
+            Idade = 30,
+            Documento = "123.456.789-00"
+        };
+
+        var suite = new Suite()
+        {
+            Numero = 1,
+            Capacidade = 2,
+            ValorDiaria = 100
+        };
+
+        var reserva = new Reserva()
+        {
+            Hospede = pessoa,
+            Suite = suite,
+            DataEntrada = new DateTime(2023, 4, 12),
+            DataSaida = new DateTime(2023, 4, 22)
+        };
+
+        Console.WriteLine($"Quantidade de hóspedes: {reserva.QuantidadeHospedes()}");
+        Console.WriteLine($"Valor total da reserva: R$ {reserva.ValorTotal():F2}");
+    }
+}
